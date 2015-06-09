@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 import functools
 import inspect
 
-from pydi.annotation import dependency
+from styng.annotation import dependency
 
 
 class Injector(metaclass=ABCMeta):

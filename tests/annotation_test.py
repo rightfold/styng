@@ -1,4 +1,4 @@
-from pydi.annotation import dependency
+from styng.annotation import dependency
 
 
 def test_dependency_name():

@@ -1,5 +1,5 @@
-from pydi.annotation import dependency
-from pydi.injector import factory_injector, identity_injector, partial_injector
+from styng.annotation import dependency
+from styng.injector import factory_injector, identity_injector, partial_injector
 
 
 def _f(n):
