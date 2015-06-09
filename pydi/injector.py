@@ -48,5 +48,16 @@ class FactoryInjector(Injector):
         return component(**dependencies)
 
 
+class IdentityInjector(Injector):
+    """Injector which returns the component as-is."""
+
+    def dependencies(self, component):
+        return set()
+
+    def inject(self, component, dependencies):
+        return component
+
+
 partial_injector = PartialInjector()
 factory_injector = FactoryInjector()
+identity_injector = IdentityInjector()

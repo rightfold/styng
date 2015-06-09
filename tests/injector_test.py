@@ -1,5 +1,5 @@
 from pydi.annotation import dependency
-from pydi.injector import factory_injector, partial_injector
+from pydi.injector import factory_injector, identity_injector, partial_injector
 
 
 def _f(n):
@@ -41,3 +41,11 @@ def test_factory_injector_dependencies():
 def test_factory_injector_inject():
     injected = factory_injector.inject(_D, {"c": _C()})
     assert injected.m(5, 6) == 16
+
+
+def test_identity_injector_dependencies():
+    assert identity_injector.dependencies(42) == set()
+
+
+def test_identity_injector_inject():
+    assert identity_injector.inject(42, {}) == 42
