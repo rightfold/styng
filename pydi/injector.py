@@ -32,7 +32,7 @@ class FactoryInjector(Injector):
     """Injector which applies callables to their dependencies."""
 
     class NonDependencyParameter(ValueError):
-        pass
+        """The factory has a parameter without a dependency annotation."""
 
     def dependencies(self, component):
         signature = inspect.signature(component)
