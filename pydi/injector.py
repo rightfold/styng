@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import functools
+import inspect
 
 from pydi.annotation import dependency
 
@@ -18,23 +19,34 @@ class PartialInjector(Injector):
     """Injector which uses functools.partial to inject dependencies."""
 
     def dependencies(self, component):
-        return {annotation.name
-                for annotation in component.__annotations__.values()
-                if isinstance(annotation, dependency)}
+        signature = inspect.signature(component)
+        return {parameter.annotation.name
+                for parameter in signature.parameters.values()
+                if isinstance(parameter.annotation, dependency)}
 
     def inject(self, component, dependencies):
         return functools.partial(component, **dependencies)
 
 
-class ConstructorInjector(Injector):
-    """Injector which instantiates classes by passing dependencies as constructor arguments."""
+class FactoryInjector(Injector):
+    """Injector which applies callables to their dependencies."""
+
+    class NonDependencyParameter(ValueError):
+        pass
 
     def dependencies(self, component):
-        raise NotImplemented()
+        signature = inspect.signature(component)
+        dependencies = set()
+        for parameter in signature.parameters.values():
+            annotation = parameter.annotation
+            if not isinstance(annotation, dependency):
+                raise FactoryInjector.NonDependencyParameter(parameter.name)
+            dependencies.add(annotation.name)
+        return dependencies
 
     def inject(self, component, dependencies):
-        raise NotImplemented()
+        return component(**dependencies)
 
 
 partial_injector = PartialInjector()
-constructor_injector = ConstructorInjector()
+factory_injector = FactoryInjector()
