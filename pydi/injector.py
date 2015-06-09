@@ -49,7 +49,7 @@ class FactoryInjector(Injector):
 
 
 class IdentityInjector(Injector):
-    """Injector which returns the component as-is."""
+    """Injector which returns components as-is."""
 
     def dependencies(self, component):
         return set()
