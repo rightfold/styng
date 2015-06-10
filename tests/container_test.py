@@ -1,5 +1,5 @@
 from styng.annotation import dependency
-from styng.container import Container
+from styng.container import ComponentAlreadyInstalledError, Container
 from styng.injector import factory_injector, identity_injector, partial_injector
 
 
@@ -36,3 +36,14 @@ def test_container():
     container.install("d", _D, factory_injector)
     assert container.resolve("g")(5, 6) == 16
     assert container.resolve("d").m(6) == 16
+
+
+def test_container_already_installed():
+    got_exception = False
+    container = Container()
+    container.install("n", 1, identity_injector)
+    try:
+        container.install("n", 2, identity_injector)
+    except ComponentAlreadyInstalledError:
+        got_exception = True
+    assert got_exception
