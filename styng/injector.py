@@ -31,7 +31,7 @@ class Injector(metaclass=ABCMeta):
 
 
 class PartialInjector(Injector):
-    """Injector which uses functools.partial to inject dependencies."""
+    """Injector which partially applies callables to their dependencies."""
 
     def dependencies(self, component):
         signature = inspect.signature(component)
