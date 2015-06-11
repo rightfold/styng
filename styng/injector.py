@@ -15,11 +15,9 @@ def _parameter_and_dependency_names(component):
 
 def _dependency_kwargs(component, dependencies):
     """Return the kwargs to be passed to the component to inject dependencies."""
-    kwargs = {}
-    parameter_and_dependency_names = _parameter_and_dependency_names(component)
-    for parameter_name, dependency_name in parameter_and_dependency_names.items():
-        kwargs[parameter_name] = dependencies[dependency_name]
-    return kwargs
+    return {parameter_name: dependencies[dependency_name]
+            for parameter_name, dependency_name
+            in _parameter_and_dependency_names(component).items()}
 
 
 class Injector(metaclass=ABCMeta):
