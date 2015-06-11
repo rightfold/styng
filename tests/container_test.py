@@ -7,13 +7,13 @@ def _f(n):
     return n * 2
 
 
-def _g(n, m, f: dependency("f")):
-    return f(n) + m
+def _g(n, m, func: dependency("f")):
+    return func(n) + m
 
 
 class _C:
-    def __init__(self, n: dependency("n")):
-        self.__n = n
+    def __init__(self, number: dependency("n")):
+        self.__n = number
 
     def m(self):
         return self.__n * 2

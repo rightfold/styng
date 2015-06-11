@@ -5,6 +5,21 @@ import inspect
 from styng.annotation import dependency
 
 
+def _parameter_and_dependency_names(component):
+    signature = inspect.signature(component)
+    return {parameter.name: parameter.annotation.name
+            for parameter in signature.parameters.values()
+            if isinstance(parameter.annotation, dependency)}
+
+
+def _dependency_kwargs(component, dependencies):
+    kwargs = {}
+    parameter_and_dependency_names = _parameter_and_dependency_names(component)
+    for parameter_name, dependency_name in parameter_and_dependency_names.items():
+        kwargs[parameter_name] = dependencies[dependency_name]
+    return kwargs
+
+
 class Injector(metaclass=ABCMeta):
     @abstractmethod
     def dependencies(self, component):
@@ -20,12 +35,12 @@ class PartialInjector(Injector):
 
     def dependencies(self, component):
         signature = inspect.signature(component)
-        return {parameter.annotation.name
-                for parameter in signature.parameters.values()
-                if isinstance(parameter.annotation, dependency)}
+        parameter_and_dependency_names = _parameter_and_dependency_names(component)
+        return set(parameter_and_dependency_names.values())
 
     def inject(self, component, dependencies):
-        return functools.partial(component, **dependencies)
+        kwargs = _dependency_kwargs(component, dependencies)
+        return functools.partial(component, **kwargs)
 
 
 class FactoryInjector(Injector):
@@ -45,7 +60,8 @@ class FactoryInjector(Injector):
         return dependencies
 
     def inject(self, component, dependencies):
-        return component(**dependencies)
+        kwargs = _dependency_kwargs(component, dependencies)
+        return component(**kwargs)
 
 
 class IdentityInjector(Injector):
