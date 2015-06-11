@@ -6,6 +6,7 @@ from styng.annotation import dependency
 
 
 def _parameter_and_dependency_names(component):
+    """Return the parameter names and respective dependency of the component."""
     signature = inspect.signature(component)
     return {parameter.name: parameter.annotation.name
             for parameter in signature.parameters.values()
@@ -13,6 +14,7 @@ def _parameter_and_dependency_names(component):
 
 
 def _dependency_kwargs(component, dependencies):
+    """Return the kwargs to be passed to the component to inject dependencies."""
     kwargs = {}
     parameter_and_dependency_names = _parameter_and_dependency_names(component)
     for parameter_name, dependency_name in parameter_and_dependency_names.items():
