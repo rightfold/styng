@@ -34,7 +34,6 @@ class PartialInjector(Injector):
     """Injector which partially applies callables to their dependencies."""
 
     def dependencies(self, component):
-        signature = inspect.signature(component)
         parameter_and_dependency_names = _parameter_and_dependency_names(component)
         return set(parameter_and_dependency_names.values())
 
